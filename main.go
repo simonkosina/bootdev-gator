@@ -19,12 +19,12 @@ type state struct {
 func main() {
 	cfg, err := config.Read()
 	if err != nil {
-		log.Fatalf("Error reading config: %v", err)
+		log.Fatalf("Error reading config: %v\n", err)
 	}
 
 	db, err := sql.Open("postgres", cfg.DbURL)
 	if err != nil {
-		log.Fatalf("Error opening database: %v", err)
+		log.Fatalf("Error opening database: %v\n", err)
 	}
 
 	st := state{
@@ -38,10 +38,13 @@ func main() {
 
 	cmds.register("login", handlerLogin)
 	cmds.register("register", handlerRegister)
+	cmds.register("reset", handlerReset)
+	cmds.register("users", handlerUsers)
+	cmds.register("agg", handlerAgg)
 
 	if len(os.Args) < 2 {
 		// TODO: Print proper usage with all the commands
-		log.Fatal("Usage: cli <command> [args...]")
+		log.Fatal("Usage: cli <command> [args...]\n")
 	}
 
 	cmd := command{
