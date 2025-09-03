@@ -11,7 +11,7 @@ import (
 
 func handlerLogin(s *state, cmd command) error {
 	if len(cmd.args) != 1 {
-		return fmt.Errorf("'login' expects a single username argument\n")
+		return fmt.Errorf("'login' expects a username argument\n")
 	}
 
 	name := cmd.args[0]
@@ -32,7 +32,7 @@ func handlerLogin(s *state, cmd command) error {
 
 func handlerRegister(s *state, cmd command) error {
 	if len(cmd.args) != 1 {
-		return fmt.Errorf("'register' expects a single username argument\n")
+		return fmt.Errorf("'register' expects a username argument\n")
 	}
 
 	id := uuid.New()
