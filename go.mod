@@ -1,4 +1,4 @@
-module github.com/simonkosina/bootdev-blog-aggregator
+module github.com/simonkosina/bootdev-gator
 
 go 1.24.5
 

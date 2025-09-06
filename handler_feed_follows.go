@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/simonkosina/bootdev-blog-aggregator/internal/database"
+	"github.com/simonkosina/bootdev-gator/internal/database"
 )
 
 func handlerFollow(s *state, cmd command) error {

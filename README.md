@@ -1,4 +1,4 @@
-# bootdev-blog-aggregator
+# bootdev-gator
 Simple blog aggre**GATOR**.
 
 # TODOs

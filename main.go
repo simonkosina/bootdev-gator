@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/simonkosina/bootdev-blog-aggregator/internal/config"
-	"github.com/simonkosina/bootdev-blog-aggregator/internal/database"
+	"github.com/simonkosina/bootdev-gator/internal/config"
+	"github.com/simonkosina/bootdev-gator/internal/database"
 
 	_ "github.com/lib/pq"
 )
