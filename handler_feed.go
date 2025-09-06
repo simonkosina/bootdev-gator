@@ -14,17 +14,11 @@ func handlerAddFeed(s *state, cmd command) error {
 		return fmt.Errorf("'addFeed' expects name and url arguments\n")
 	}
 
-	id := uuid.New()
 	name := cmd.args[0]
 	url := cmd.args[1]
 	currentTime := time.Now().UTC()
 
-	userName := s.cfg.CurrentUserName
-	if len(userName) == 0 {
-		return fmt.Errorf("'addFeed' requires a user to be logged in\n")
-	}
-
-	user, err := s.db.GetUser(context.Background(), userName)
+	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
 	if err != nil {
 		return fmt.Errorf("'addFeed' failed to retrieve current user: %w\n", err)
 	}
@@ -32,7 +26,7 @@ func handlerAddFeed(s *state, cmd command) error {
 	feed, err := s.db.CreateFeed(
 		context.Background(),
 		database.CreateFeedParams{
-			ID:        id,
+			ID:        uuid.New(),
 			CreatedAt: currentTime,
 			UpdatedAt: currentTime,
 			Name:      name,
@@ -40,8 +34,42 @@ func handlerAddFeed(s *state, cmd command) error {
 			UserID:    user.ID,
 		},
 	)
+	if err != nil {
+		return fmt.Errorf("'addFeed' failed to create feed: %w\n", err)
+	}
 
 	fmt.Printf("Feed was added successfully: %+v\n", feed)
+
+	_, err = s.db.CreateFeedFollow(
+		context.Background(),
+		database.CreateFeedFollowParams{
+			ID:        uuid.New(),
+			CreatedAt: currentTime,
+			UpdatedAt: currentTime,
+			UserID:    user.ID,
+			FeedID:    feed.ID,
+		},
+	)
+	if err != nil {
+		return fmt.Errorf("'addFeed' failed to create feed follow: %w\n", err)
+	}
+
+	return nil
+}
+
+func handlerFeeds(s *state, cmd command) error {
+	if len(cmd.args) != 0 {
+		return fmt.Errorf("'feeds' doesn't expect any arguments\n")
+	}
+
+	feeds, err := s.db.GetFeeds(context.Background())
+	if err != nil {
+		return fmt.Errorf("'feeds' failed to retrieve feeds: %w\n", err)
+	}
+
+	for _, feed := range feeds {
+		fmt.Printf("%+v\n", feed)
+	}
 
 	return nil
 }

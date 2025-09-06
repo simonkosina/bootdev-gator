@@ -35,14 +35,13 @@ func handlerRegister(s *state, cmd command) error {
 		return fmt.Errorf("'register' expects a username argument\n")
 	}
 
-	id := uuid.New()
 	currentTime := time.Now().UTC()
 	name := cmd.args[0]
 
 	user, err := s.db.CreateUser(
 		context.Background(),
 		database.CreateUserParams{
-			ID:        id,
+			ID:        uuid.New(),
 			UpdatedAt: currentTime,
 			CreatedAt: currentTime,
 			Name:      name,
