@@ -51,7 +51,12 @@ func handlerFollowing(s *state, cmd command) error {
 		return fmt.Errorf("Usage: gator %s\n", cmd.name)
 	}
 
-	follows, err := s.db.GetFeedFollowsForUser(context.Background(), s.cfg.CurrentUserName)
+	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
+	if err != nil {
+		return fmt.Errorf("'following' failed to retrieve current user: %w\n", err)
+	}
+
+	follows, err := s.db.GetFeedFollowsForUser(context.Background(), user.ID)
 	if err != nil {
 		return fmt.Errorf("'following' failed to retrieve followed feeds: %w\n", err)
 	}
