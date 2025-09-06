@@ -11,7 +11,7 @@ import (
 
 func handlerFollow(s *state, cmd command) error {
 	if len(cmd.args) != 1 {
-		return fmt.Errorf("'follow' expects url argument\n")
+		return fmt.Errorf("Usage: gator %s <feed_url>\n", cmd.name)
 	}
 
 	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
@@ -48,7 +48,7 @@ func handlerFollow(s *state, cmd command) error {
 
 func handlerFollowing(s *state, cmd command) error {
 	if len(cmd.args) != 0 {
-		return fmt.Errorf("'following' doesn't expect any arguments\n")
+		return fmt.Errorf("Usage: gator %s\n", cmd.name)
 	}
 
 	follows, err := s.db.GetFeedFollowsForUser(context.Background(), s.cfg.CurrentUserName)

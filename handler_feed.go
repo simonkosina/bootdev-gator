@@ -11,7 +11,7 @@ import (
 
 func handlerAddFeed(s *state, cmd command) error {
 	if len(cmd.args) != 2 {
-		return fmt.Errorf("'addFeed' expects name and url arguments\n")
+		return fmt.Errorf("Usage: gator %s <feed_name> <feed_url>\n", cmd.name)
 	}
 
 	name := cmd.args[0]
@@ -59,7 +59,7 @@ func handlerAddFeed(s *state, cmd command) error {
 
 func handlerFeeds(s *state, cmd command) error {
 	if len(cmd.args) != 0 {
-		return fmt.Errorf("'feeds' doesn't expect any arguments\n")
+		return fmt.Errorf("Usage: gator %s\n", cmd.name)
 	}
 
 	feeds, err := s.db.GetFeeds(context.Background())

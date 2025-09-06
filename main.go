@@ -48,7 +48,7 @@ func main() {
 
 	if len(os.Args) < 2 {
 		// TODO: Print proper usage with all the commands
-		log.Fatal("Usage: cli <command> [args...]\n")
+		log.Fatal("Usage: gator <command> [args...]\n")
 	}
 
 	cmd := command{

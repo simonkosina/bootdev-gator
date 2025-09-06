@@ -11,7 +11,7 @@ import (
 
 func handlerLogin(s *state, cmd command) error {
 	if len(cmd.args) != 1 {
-		return fmt.Errorf("'login' expects a username argument\n")
+		return fmt.Errorf("Usage: gator %s <user_name>", cmd.name)
 	}
 
 	name := cmd.args[0]
@@ -32,7 +32,7 @@ func handlerLogin(s *state, cmd command) error {
 
 func handlerRegister(s *state, cmd command) error {
 	if len(cmd.args) != 1 {
-		return fmt.Errorf("'register' expects a username argument\n")
+		return fmt.Errorf("Usage: gator %s <user_name>", cmd.name)
 	}
 
 	currentTime := time.Now().UTC()
@@ -62,7 +62,7 @@ func handlerRegister(s *state, cmd command) error {
 
 func handlerUsers(s *state, cmd command) error {
 	if len(cmd.args) != 0 {
-		return fmt.Errorf("'users' doesn't expect any arguments\n")
+		return fmt.Errorf("Usage: gator %s", cmd.name)
 	}
 
 	users, err := s.db.GetUsers(context.Background())
@@ -83,7 +83,7 @@ func handlerUsers(s *state, cmd command) error {
 
 func handlerReset(s *state, cmd command) error {
 	if len(cmd.args) != 0 {
-		return fmt.Errorf("'reset' doesn't expect any arguments\n")
+		return fmt.Errorf("Usage: gator %s", cmd.name)
 	}
 
 	err := s.db.DeleteUsers(context.Background())
