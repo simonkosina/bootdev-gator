@@ -9,7 +9,7 @@ import (
 	"github.com/simonkosina/bootdev-gator/internal/database"
 )
 
-func handlerAddFeed(s *state, cmd command) error {
+func handlerAddFeed(s *state, cmd command, user database.User) error {
 	if len(cmd.args) != 2 {
 		return fmt.Errorf("Usage: gator %s <feed_name> <feed_url>\n", cmd.name)
 	}
@@ -17,11 +17,6 @@ func handlerAddFeed(s *state, cmd command) error {
 	name := cmd.args[0]
 	url := cmd.args[1]
 	currentTime := time.Now().UTC()
-
-	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("'addFeed' failed to retrieve current user: %w\n", err)
-	}
 
 	feed, err := s.db.CreateFeed(
 		context.Background(),
@@ -35,7 +30,7 @@ func handlerAddFeed(s *state, cmd command) error {
 		},
 	)
 	if err != nil {
-		return fmt.Errorf("'addFeed' failed to create feed: %w\n", err)
+		return fmt.Errorf("'addfeed' failed to create feed: %w\n", err)
 	}
 
 	fmt.Printf("Feed was added successfully: %+v\n", feed)
@@ -51,7 +46,7 @@ func handlerAddFeed(s *state, cmd command) error {
 		},
 	)
 	if err != nil {
-		return fmt.Errorf("'addFeed' failed to create feed follow: %w\n", err)
+		return fmt.Errorf("'addfeed' failed to create feed follow: %w\n", err)
 	}
 
 	return nil
