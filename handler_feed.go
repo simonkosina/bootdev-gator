@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -67,4 +68,25 @@ func handlerFeeds(s *state, cmd command) error {
 	}
 
 	return nil
+}
+
+func handlerAgg(s *state, cmd command) error {
+	if len(cmd.args) != 1 {
+		return fmt.Errorf("Usage: gator %s <time_between_reqs>\n", cmd.name)
+	}
+
+	timeBetweenRequests, err := time.ParseDuration(cmd.args[0])
+	if err != nil {
+		return fmt.Errorf("'agg' error parsing time duration (expected Go's time.ParseDuration format, e.g. 1s, 1m, 1h30m): %w\n", err)
+	}
+	if timeBetweenRequests <= 0 {
+		return fmt.Errorf("'agg' time between requests must be greater than 0\n")
+	}
+
+	ticker := time.NewTicker(timeBetweenRequests)
+
+	log.Printf("Collecting feeds every %s...", timeBetweenRequests)
+	for ; ; <-ticker.C {
+		scrapeFeeds(s)
+	}
 }
