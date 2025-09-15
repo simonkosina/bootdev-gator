@@ -2,11 +2,14 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"encoding/xml"
 	"html"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/simonkosina/bootdev-gator/internal/database"
 )
 
@@ -74,10 +77,46 @@ func scrapeFeed(db *database.Queries, feed database.Feed) {
 	}
 
 	for _, item := range feedData.Channel.Item {
-		log.Printf("Found post: %s\n", item.Title)
+		savePost(db, feed, item)
 	}
 
 	log.Printf("Feed %s collected, %v posts found", feed.Name, len(feedData.Channel.Item))
+}
+
+func savePost(db *database.Queries, feed database.Feed, post RSSItem) {
+	log.Printf("Saving post '%s' (%s)\n", post.Title, post.Link)
+
+	publishedAt, err := time.Parse(time.RFC1123Z, post.PubDate)
+	if err != nil {
+		log.Printf("Error parsing 'pubDate' for post '%s': %v\n", post.Title, err)
+		return
+	}
+
+	currentTime := time.Now().UTC()
+
+	_, err = db.CreatePost(context.Background(), database.CreatePostParams{
+		ID:        uuid.New(),
+		CreatedAt: currentTime,
+		UpdatedAt: currentTime,
+		Title:     post.Title,
+		Url:       post.Link,
+		Description: sql.NullString{
+			String: post.Description,
+			Valid:  len(post.Description) > 0,
+		},
+		PublishedAt: publishedAt,
+		FeedID:      feed.ID,
+	})
+	if err != nil {
+		if err.Error() == "pq: duplicate key value violates unique constraint \"posts_url_key\"" {
+			log.Printf("Post '%s' is already saved, skipping\n", post.Title)
+		} else {
+			log.Printf("Couldn't save post '%s': %v\n", post.Title, err)
+		}
+
+		return
+	}
+	log.Printf("Post '%s' was saved successfully\n", post.Title)
 }
 
 func scrapeFeeds(s *state) {
