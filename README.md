@@ -1,19 +1,19 @@
 # Blog aggreGATOR project from Boot.Dev
 
-Simple blog aggre**GATOR** project from Boot.Dev. Allows users to subscribe to different RSS feeds, periodically fetch them, store published posts in a database and browse through them.
+Simple blog aggre**GATOR** project from Boot.Dev. Allows users to subscribe to different RSS feeds, periodically fetch them, store published posts in a database, and browse through them.
 
 More information about the assignment can be found [here](https://www.boot.dev/courses/build-blog-aggregator-golang).
 
 ## Setup
-We'll need a PostgreSQL database in order to store information about users, the feeds they follow and published posts.
+You'll need a PostgreSQL database to store information about users, the feeds they follow, and published posts.
 
-1. Copy the provided example `.env.default` file to `.env`, to make sure correct environment variables are present when running the containers. Feel free to update the values to suit your needs.
+1. Copy the provided example `.env.default` file to `.env` to ensure the correct environment variables are present when running the containers. Feel free to update the values to suit your needs.
 
 ```bash
 cp .env.default .env
 ```
 
-2. Spin up the PostgreSQL database container. Second container, running the image defined in the `goose` directory, will be build in order to execute the database migrations from `sql/schema`.
+2. Spin up the PostgreSQL database container. A second container, running the image defined in the `goose` directory, will be built to execute the database migrations from `sql/schema`.
 
 ```bash
 $ docker compose up
@@ -31,7 +31,7 @@ gator_goose  | 2025/09/21 05:17:47 goose: successfully migrated database to vers
 gator_goose exited with code 0
 ```
 
-And that's it. In the logs you should see that the `gator_goose` container, succesfully completed the migrations and shut down afterwards.
+That's it! In the logs, you should see that the `gator_goose` container successfully completed the migrations and shut down afterwards.
 
 ```bash
 $ docker ps -a
@@ -52,7 +52,7 @@ Install the `bootdev-gator` CLI tool by running the following.
 $ go install github.com/simonkosina/bootdev-gator@latest
 ```
 
-Verify the installation was successfull. You should see the usage guide printed in your console.
+Verify the installation was successful. You should see the usage guide printed in your console.
 
 ```bash
 $ bootdev-gator
