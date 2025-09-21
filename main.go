@@ -2,8 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/simonkosina/bootdev-gator/internal/config"
 	"github.com/simonkosina/bootdev-gator/internal/database"
@@ -14,6 +16,25 @@ import (
 type state struct {
 	cfg *config.Config
 	db  *database.Queries
+}
+
+func printHelp() {
+	helpText := `Usage: gator <command> [args...]
+
+Commands:
+  login <user_name>                Set the current user
+  register <user_name>             Register a new user and set as current
+  reset                            Reset (delete) all users
+  users                            List all users
+  agg <time_between_reqs>          Collect feeds every given duration (e.g. 1m, 30s)
+  addfeed <feed_name> <feed_url>   Add a new feed and follow it
+  feeds                            List all feeds
+  follow <feed_url>                Follow a feed
+  following                        List feeds you are following
+  unfollow <feed_url>              Unfollow a feed
+  browse [limit]                   Browse posts (default limit: 2)
+`
+	fmt.Print(helpText)
 }
 
 func main() {
@@ -49,8 +70,8 @@ func main() {
 	cmds.register("browse", middlewareLoggedIn(handlerBrowse))
 
 	if len(os.Args) < 2 {
-		// TODO: Print proper usage with all the commands
-		log.Fatal("Usage: gator <command> [args...]\n")
+		printHelp()
+		os.Exit(1)
 	}
 
 	cmd := command{
@@ -59,6 +80,12 @@ func main() {
 	}
 
 	if err := cmds.run(&st, cmd); err != nil {
-		log.Fatal(err)
+		if strings.Contains(err.Error(), "Unknown command:") {
+			log.Print(err)
+			printHelp()
+			os.Exit(1)
+		} else {
+			log.Fatal(err)
+		}
 	}
 }

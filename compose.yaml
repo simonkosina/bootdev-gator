@@ -11,6 +11,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   goose:
+    container_name: gator_goose
     build:
       context: goose
     depends_on:
