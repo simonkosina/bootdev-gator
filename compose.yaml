@@ -19,7 +19,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./sql/schema/:${GOOSE_MIGRATION_DIR}
+      - ./sql/schema/:${GOOSE_MIGRATION_DIR}:Z
 
 volumes:
   postgres_data:
